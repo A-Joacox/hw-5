@@ -11,6 +11,10 @@
 #include "disasm.h"
 #include "loader.h"
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 namespace {
 
 const char* const HELP = R"(Comandos:
@@ -130,8 +134,8 @@ private:
             return false;
         }
         if (cpu_.pc == old_pc) {  // p. ej. "j ." al final de los programas
-            std::cout << "La instrucción en " << hex32(old_pc)
-                      << " salta a sí misma (bucle infinito): fin del programa.\n";
+            std::cout << "Programa finalizado: llegó al bucle final en " << hex32(old_pc)
+                      << " (una instrucción que salta a sí misma, como 'j .').\n";
             return false;
         }
         return true;
@@ -197,6 +201,11 @@ private:
 }  // namespace
 
 int main(int argc, char** argv) {
+#ifdef _WIN32
+    // Los mensajes están en UTF-8; sin esto la consola de Windows muestra mal las tildes.
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+#endif
     if (argc != 2) {
         std::cerr << "Uso: " << argv[0] << " <programa.bin | programa.elf>\n";
         return 1;

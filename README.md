@@ -26,7 +26,7 @@ En Windows con MSYS2 (ucrt64) agrega `-G "MinGW Makefiles"` al primer comando. E
 0x00000000:  00010137  lui sp, 0x10
 0x00000004:  00001537  lui a0, 0x1
 > run
-La instrucción en 0x0000004C salta a sí misma (bucle infinito): fin del programa.
+Programa finalizado: llegó al bucle final en 0x0000004C (una instrucción que salta a sí misma, como 'j .').
 > words 0x1000 7
 0x00001000: 0x00000001  (1)
 ...
@@ -62,7 +62,7 @@ Los números aceptan decimal o hexadecimal (`0x1000`).
 - **`ecall`** con las llamadas de SPIM/CPUlator (código en `a7`): 1 print int, 4 print string, 5 read int, 8 read string, 10 exit, 11 print char, 12 read char, 17 y 93 exit con código en `a0`. `ebreak` detiene la ejecución.
 - **Breakpoints** y `run`.
 
-**Errores explícitos.** Una instrucción inválida, un PC desalineado o una `ecall` no soportada detienen la ejecución con un mensaje que incluye el PC y la palabra de instrucción. Una instrucción que salta a sí misma (`j .`, con la que terminan los programas de prueba) se reporta como fin del programa.
+**Errores explícitos.** Una instrucción inválida, un PC desalineado o una `ecall` no soportada detienen la ejecución con un mensaje que incluye el PC y la palabra de instrucción. Los programas de prueba no tienen una instrucción de "salir": terminan con `j .`, una instrucción que salta a sí misma para siempre. El simulador detecta ese caso y lo reporta como fin normal del programa en lugar de quedarse colgado.
 
 ## Diseño
 
